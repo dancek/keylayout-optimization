@@ -1,21 +1,24 @@
 #!/bin/sh
 
-# start
-current=./current-keymap.conf
-cp ./carpalx-0.12/etc/keyboards/qwerty.conf $current
-
-optimized=optimized_$(date '+%s')
+optimized=optimized_$(date '+%Y%m%d_%H%M')
 mkdir -p "$optimized"
 
+# start
+current="$optimized/qwerty.conf"
+cp ./carpalx-0.12/etc/keyboards/qwerty.conf $current
+
 for i in $(seq -w 10); do
+    next="$optimized/swap-$i.conf"
+
     echo "**********************************************************************"
     echo "***** GENERATION $i"
     echo
 
-    rm -f out/*
-    touch out/_placeholder.conf # because grep outputs differently when there are multiple files
-    perl ./carpalx-0.12/bin/carpalx -conf ./single-swap.conf
-    best=$(grep "^effort" out/* | sort -n +2 -3 | head -1 | sed 's/:effort.*//')
-    cp "$best" "$optimized/$i.conf"
-    cp "$best" $current
+    perl ./carpalx-0.12/bin/carpalx \
+        -conf ./single-swap.conf \
+        -keyboard_input "$current" \
+        -keyboard_output "../$next"
+        # output is relative to carpalx-0.12/ (wtf)
+
+    current="$next"
 done
