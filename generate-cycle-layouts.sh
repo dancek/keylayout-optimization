@@ -4,10 +4,9 @@ optimized=optimized_$(date '+%Y%m%d_%H%M')
 mkdir -p "$optimized"
 
 # start
-current="$optimized/qwerty.conf"
-cp ./carpalx-0.12/etc/keyboards/qwerty.conf $current
+current="${1:-./carpalx-0.12/etc/keyboards/qwerty.conf}"
 
-for i in $(seq -w 10); do
+for i in $(seq -w $2 ${3:-10}); do
     next="$optimized/cycle-$i.conf"
 
     echo "**********************************************************************"
