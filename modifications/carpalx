@@ -208,7 +208,8 @@ GetOptions(\%OPT,
 					 "triads_max_num=i",
 					 "triads_overlap",
 					 "cdump",
-					 "configfile=s","help","man","debug+");
+					 "configfile=s","help","man","debug+",
+           "swap3");
 
 pod2usage() if $OPT{help};
 pod2usage(-verbose=>2) if $OPT{man};
@@ -934,14 +935,24 @@ sub _swap_keys {
   $n = 1 if ! $n;
   my $reloc_listsize = @$reloc_list;
   foreach (1..$n) {
-    # pick two random keyboard locations from the list of relocatable keys
-    my ($key1,$key2);
-    while ( $key1 == $key2) {
-      $key1 = $reloc_list->[rand($reloc_listsize)];
-      $key2 = $reloc_list->[rand($reloc_listsize)];
+    if ($CONF{swap3}) {
+      my ($key1,$key2,$key3);
+      while ($key1 == $key2 || $key2 == $key3 || $key3 == $key1) {
+        $key1 = $reloc_list->[rand($reloc_listsize)];
+        $key2 = $reloc_list->[rand($reloc_listsize)];
+        $key3 = $reloc_list->[rand($reloc_listsize)];
+      }
+      _swap_key_triad($keyboardcopy,@$key1,@$key2,@$key3);
+    } else {
+      # pick two random keyboard locations from the list of relocatable keys
+      my ($key1,$key2);
+      while ( $key1 == $key2) {
+        $key1 = $reloc_list->[rand($reloc_listsize)];
+        $key2 = $reloc_list->[rand($reloc_listsize)];
+      }
+      # swap these two keys
+      _swap_key_pair($keyboardcopy,@$key1,@$key2);
     }
-    # swap these two keys
-    _swap_key_pair($keyboardcopy,@$key1,@$key2);
   }
   return $keyboardcopy;
 }
@@ -968,6 +979,34 @@ sub _swap_key_pair {
   @{$keyboard->{key}[$row2][$col2]}{qw(lc uc)} = ($k1lc,$k1uc);
 
   @{$keyboard->{map}}{$k1lc,$k1uc,$k2lc,$k2uc} = @{$keyboard->{map}}{$k2lc,$k2uc,$k1lc,$k1uc};
+}
+
+=pod
+
+=head2 _swap_key_triad()
+
+  $key1 = [$row1,$col1];
+  $key2 = [$row2,$col2];
+  $key3 = [$row3,$col3];
+  _swap_key_triad($keyboard,@$key1,@$key2,@$key3);
+
+This function modifies $keyboard in place.
+
+=cut
+
+sub _swap_key_triad {
+  my ($keyboard,$row1,$col1,$row2,$col2,$row3,$col3) = @_;
+
+  my ($k1lc,$k1uc) = @{ $keyboard->{key}[$row1][$col1] }{qw(lc uc)};
+  my ($k2lc,$k2uc) = @{ $keyboard->{key}[$row2][$col2] }{qw(lc uc)};
+  my ($k3lc,$k3uc) = @{ $keyboard->{key}[$row3][$col3] }{qw(lc uc)};
+
+  @{$keyboard->{key}[$row1][$col1]}{qw(lc uc)} = ($k2lc,$k2uc);
+  @{$keyboard->{key}[$row2][$col2]}{qw(lc uc)} = ($k3lc,$k3uc);
+  @{$keyboard->{key}[$row3][$col3]}{qw(lc uc)} = ($k1lc,$k1uc);
+
+  @{$keyboard->{map}}{$k1lc,$k1uc,$k2lc,$k2uc,$k3lc,$k3uc} =
+    @{$keyboard->{map}}{$k3lc,$k3uc,$k1lc,$k1uc,$k2lc,$k2uc};
 }
 
 =pod
