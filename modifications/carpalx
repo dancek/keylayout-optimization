@@ -277,6 +277,8 @@ while(my $action = shift(@actions)) {
     $timer = tv_interval($timer);
     printkeyboard($keyboard);
     print "Total time spent optimizing: $timer s\n";
+  } elsif ($action =~ "printeffort") {
+    printf("%.3f", calculate_effort($keytriads, $keyboard));
   } elsif ($action =~ /(exit|quit)/) {
     exit;
   } else {
