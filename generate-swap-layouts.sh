@@ -7,7 +7,7 @@ mkdir -p "$optimized"
 current="${1:-./carpalx-0.12/etc/keyboards/qwerty.conf}"
 
 for i in $(seq -w $2 ${3:-10}); do
-    next="$optimized/custom-effort-$i.conf"
+    next="$optimized/another-custom-effort-$i.conf"
 
     echo "**********************************************************************"
     echo "***** GENERATION $i"
