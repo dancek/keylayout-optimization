@@ -12,6 +12,18 @@ Carpalx standard
 9. - '
 10. a n ***
 
+Carpalx standard, fixed a
+1. j n
+2. f t
+3. e k
+4. d o
+5. p ;
+6. h i
+7. g r
+8. - '
+9. i n ***
+10. q =
+
 Aggressively tuned model
 1. f t
 2. j n
@@ -35,6 +47,30 @@ Conservatively tuned model
 8. e n ***
 9. - '
 10. w m
+
+Conservatively tuned, fixed a
+1. f t
+2. j n
+3. d o
+4. k r
+5. p ;
+6. i r ***
+7. h u
+8. - '
+9. k g ***
+10. e o ***
+
+Conservatively tuned, fixed a, manual triad 
+1. f t
+2. j n
+3. o p ;
+4. e k
+5. d r
+6. h u
+7. - '
+8. g m
+9. w .
+10. q =
 
 ÄÖ
 1. f t
